@@ -11,12 +11,14 @@ end
 defmodule Slack.Rtm do
   @moduledoc false
 
+  @headers [{"Content-type", "application/x-www-form-urlencoded"}]
+
   def start(token) do
     with url <- slack_url(token),
-         headers <- [],
+         headers <- @headers,
          options <- Application.get_env(:slack, :web_http_client_opts, []) do
       url
-      |> HTTPoison.get(headers, options)
+      |> HTTPoison.post(URI.encode_query(%{token: token}), headers, options)
       |> handle_response()
     end
   end
@@ -40,8 +42,8 @@ defmodule Slack.Rtm do
 
   defp handle_response(error), do: error
 
-  defp slack_url(token) do
+  defp slack_url(_) do
     Application.get_env(:slack, :url, "https://slack.com") <>
-      "/api/rtm.start?token=#{token}&batch_presence_aware=true&presence_sub=true"
+      "/api/rtm.start?batch_presence_aware=true&presence_sub=true"
   end
 end
