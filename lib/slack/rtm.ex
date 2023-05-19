@@ -44,6 +44,6 @@ defmodule Slack.Rtm do
 
   defp slack_url(_) do
     Application.get_env(:slack, :url, "https://slack.com") <>
-      "/api/rtm.start?batch_presence_aware=true&presence_sub=true"
+      "/api/rtm.connect?batch_presence_aware=true&presence_sub=true"
   end
 end
